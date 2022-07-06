@@ -1,5 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { ID, ObjectType, Field } from 'type-graphql';
+// import Task from './Task';
+import User from './User';
 
 @ObjectType()
 class Project {
@@ -12,19 +14,28 @@ class Project {
   @Field()
   subject?: string;
 
-  @Field()
-  projectOwner?: string;
+  // @Field(() => String)
+  // projectOwner?: keyof User['email'] | string;
 
   @Field(() => [ID])
   members?: string[];
 
-  @Field()
-  estimationTime?: number;
+  @Field(() => [ID])
+  tasks?: string[];
 
-  @Field()
-  spentTime?: number;
+  @Field(() => ID, { nullable: true })
+  user?: string;
 
-  @Field()
+  @Field(() => String)
+  creator?: keyof User['email'] | string;
+
+  @Field({ nullable: true })
+  initial_time_estimation?: number;
+
+  @Field({ nullable: true })
+  spent_time?: number;
+
+  @Field({ nullable: true })
   deadline?: string;
 }
 

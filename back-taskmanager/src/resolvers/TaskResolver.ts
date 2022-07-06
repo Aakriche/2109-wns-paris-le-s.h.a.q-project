@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 // import { isAuth } from '../modules/middleware/isAuth';
 import { JwtPayload } from "jsonwebtoken";
 import { ApolloError } from "apollo-server";
@@ -11,7 +11,7 @@ import TaskModels from "../models/TaskModel";
 
 @Resolver(Task)
 class TaskResolver {
-  @Authorized()
+  // @Authorized()
   @Query(() => [Task])
   async allTasks() {
     const tasks = await TaskModels.find();
@@ -26,7 +26,7 @@ class TaskResolver {
     try {
       const newTask = new TaskModels(createTaskInput);
       if (ctx && ctx.authenticatedUserEmail) {
-        newTask.author = ctx.authenticatedUserEmail;
+        newTask.creator = ctx.authenticatedUserEmail;
         await newTask.save();
         return newTask;
       }
@@ -37,7 +37,7 @@ class TaskResolver {
   }
 
   @Query(() => Task)
-  findOneTask(@Arg('id') _id: string) {
+  findOneTaskById(@Arg('id') _id: string) {
     return TaskModels.findOne({ _id }).exec();
   }
 
@@ -53,7 +53,7 @@ class TaskResolver {
   }
 
   @Mutation(() => Task)
-  async updateTask(
+  async editTaskById(
     @Ctx() ctx: JwtPayload,
     @Arg('id') _id: string,
     @Arg('data') data: UpdateTaskInput
@@ -61,7 +61,7 @@ class TaskResolver {
     if (ctx && ctx.authenticatedUserEmail) {
       const task = await TaskModels.findOne({ _id }).exec();
       if (!task) throw new Error('Task not found!');
-      if (task?.author !== ctx.authenticatedUserEmail) {
+      if (task?.creator !== ctx.authenticatedUserEmail || task?.user === 'admin' || task?.user === 'project manager') {
         return new ApolloError('Not Authorized');
       }
       if (task !== null && task !== undefined) {
@@ -73,15 +73,18 @@ class TaskResolver {
     return new ApolloError('Not Authorized');
   }
 
+  // TODO: create a mutation to delete many tasks at once
+
   @Mutation(() => Boolean)
-  async deleteTask(@Ctx() ctx: JwtPayload, @Arg('id') _id: string) {
+  async deleteTaskById(@Ctx() ctx: JwtPayload, @Arg('id') _id: string) {
     if (ctx && ctx.authenticatedUserEmail) {
       const task = await TaskModels.findOne({ _id }).exec();
       if (!task) throw new Error('Task not found!');
-      if (task?.author === ctx.authenticatedUserEmail) {
+      if (task?.creator === ctx.authenticatedUserEmail && task.user === 'admin' || task.user === 'project manager') {
         await task.remove();
+      } else {
+        return new ApolloError('Not Authorized'); 
       }
-      return true;
     }
     return new ApolloError('Not Authorized');
   }

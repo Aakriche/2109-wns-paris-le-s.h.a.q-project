@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { ApolloError, ApolloServer, AuthenticationError } from 'apollo-server';
-import { buildSchema, Ctx } from 'type-graphql';
+import { buildSchema } from 'type-graphql';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import TaskResolver from './resolvers/TaskResolver';
@@ -31,16 +31,15 @@ async function createServer() {
     },
     authMode: 'null',
   });
+
   const server = new ApolloServer({
     schema,
     context: ({ req }) => {
       const token = req.headers.authorization;
-
       if (token) {
         let payload: JwtPayload;
         try {
           payload = jwt.verify(token, jwtKey) as JwtPayload;
-
           return { authenticatedUserEmail: payload.user };
         } catch (err) {
           throw new AuthenticationError('Veuillez vous reconnecter');

@@ -7,6 +7,7 @@ import Comment from '../entity/entities/Comment';
 
 @Resolver(Comment)
 class CommentResolver {
+
   @Query(() => [Comment])
   async allComments() {
     const comments = await CommentModels.find();

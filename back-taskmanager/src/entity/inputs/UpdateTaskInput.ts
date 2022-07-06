@@ -1,5 +1,4 @@
 import { ID, Field, InputType } from 'type-graphql';
-import Project from '../entities/Project';
 import User from '../entities/User';
 
 @InputType()
@@ -10,8 +9,11 @@ export default class UpdateTaskInput {
   @Field()
   description!: string;
 
+  // @Field(() => ID)
+  // project!: Project;
+
   @Field(() => ID)
-  project!: Project;
+  project!: string;
 
   @Field({ nullable: true })
   status?: string;
@@ -21,6 +23,9 @@ export default class UpdateTaskInput {
 
   @Field(() => ID)
   user!: keyof User;
+
+  @Field({ nullable: true })
+  creator?: string;
 
   @Field({ nullable: true })
   initial_time_estimation?: number;

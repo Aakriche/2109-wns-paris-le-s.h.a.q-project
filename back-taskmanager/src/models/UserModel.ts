@@ -32,7 +32,7 @@ const UserSchema = new Schema<UserData>(
     role: {
       type: String,
       enum: ['admin', 'developer', 'project manager', 'other'],
-      default: 'developer',
+      default: '',
     },
   },
   {

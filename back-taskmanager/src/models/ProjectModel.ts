@@ -1,31 +1,34 @@
 /* eslint-disable import/no-cycle */
 import mongoose from 'mongoose';
+// import { TaskData } from './TaskModel';
+import { UserData } from './UserModel';
 
-// export interface ProjectData {
-//   id: string;
-//   title: string;
-//   subject: string;
-//   projectOwner?: string;
-//   members: Types.ObjectId;
-//   estimationTime: number;
-//   spentTime: number;
-//   deadline: string;
-// }
+export interface ProjectData {
+  id: string | number;
+  title: string;
+  subject: string;
+  projectOwner?: keyof UserData['email'] | string;
+  tasks: string[];
+  members: string[];
+  user: string;
+  creator: string;
+  initial_time_estimation: number;
+  spent_time: number;
+  deadline: string;
+}
 
 const { Schema } = mongoose;
-const ProjectSchema = new Schema(
+const ProjectSchema = new Schema<ProjectData>(
   {
-    title: {
-      type: String,
-      required: true,
-    },
+    title: String,
     subject: String,
-    projectOwner: { type: mongoose.Types.ObjectId, default: null, ref: 'user' },
-    members: [
-      {  type: mongoose.Types.ObjectId, 
-        ref: "user"} ],
-    estimationTime: Number,
-    spentTime: Number,
+    projectOwner: String,
+    tasks: [{ type: Schema.Types.ObjectId, ref: 'task' }],
+    members: [{ type: Schema.Types.ObjectId, ref: 'user' }], 
+    initial_time_estimation: Number,
+    spent_time: Number,
+    creator: String,
+    user: String,
     deadline: String,
   },
   {
@@ -36,4 +39,4 @@ const ProjectSchema = new Schema(
   }
 );
 
-export default mongoose.model('project', ProjectSchema);
+export default mongoose.model<ProjectData>('project', ProjectSchema);

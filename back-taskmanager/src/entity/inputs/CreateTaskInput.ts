@@ -8,17 +8,20 @@ export default class CreateTaskInput {
   @Field()
   description!: string;
 
-  @Field(() => ID)
+  @Field(() => ID, { nullable: true })
   project!: string;
+  
+  @Field(() => ID, { nullable: true })
+  user!: string;
 
-  @Field()
+  @Field({ nullable: true })
   status?: string;
 
   @Field({ nullable: true })
   priority?: string;
 
-  @Field(() => ID)
-  user!: string;
+  @Field({ nullable: true })
+  creator?: string;
 
   @Field({ nullable: true })
   initial_time_estimation?: number;
@@ -31,9 +34,7 @@ export default class CreateTaskInput {
 
   @Field({ nullable: true })
   deadline?: string;
-
-  @Field({ nullable: true })
-  author?: string;
+  
   /*   @Field()
   document_upload?: String; */
 }

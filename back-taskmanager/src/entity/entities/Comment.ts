@@ -1,24 +1,20 @@
-import { ObjectType, Field } from 'type-graphql';
-import Task from './Task';
-import User from './User';
+import { ObjectType, Field, ID } from 'type-graphql';
 
 @ObjectType()
-class Comment {
+export default class Comment {
+  @Field(() => ID)
+  id!: string;
 
-  @Field(() => User)
-  user!: User;
+  @Field(() => ID)
+  user!: string;
 
   @Field()
   content!: string;
 
-  @Field()
-  avatar?: string;
+  @Field(() => ID)
+  task?: string;
 
   @Field()
   status?: string;
 
-  @Field(() => Task)
-  task?: Task;
 }
-
-export default Comment;

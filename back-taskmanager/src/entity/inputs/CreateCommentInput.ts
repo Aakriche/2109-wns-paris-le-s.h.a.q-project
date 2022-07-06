@@ -1,25 +1,18 @@
-import { InputType, Field } from 'type-graphql';
+import { InputType, Field, ID } from 'type-graphql';
 
 @InputType()
 export default class CreateCommentInput {
-  @Field(() => String)
-  userId!: string;
 
-  @Field(() => String)
-  author!: string;
+  @Field(() => ID)
+  user!: string;
 
-  @Field(() => String)
+  @Field()
   content!: string;
 
-  @Field(() => String)
-  task!: string;
+  @Field()
+  task?: string;
 
-  /*   @Field(() => String)
-  taskId!: string; */
+  @Field()
+  status?: string;
 
-  @Field(() => Boolean)
-  isPublished!: boolean;
-
-  @Field(() => String)
-  createdAt!: string;
 }

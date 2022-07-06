@@ -35,7 +35,7 @@ class UserResolver {
   @Mutation(() => User)
   async updateUser(@Arg('id') _id: string, @Arg('data') data: UpdateUserInput) {
     const user = await UserModel.findOne({ _id }).exec();
-    if (!user) throw new Error('Task not found!');
+    if (!user) throw new Error('User not found!');
     if (user !== null && user !== undefined) {
       Object.assign(user, data);
       await user.save();
@@ -46,7 +46,7 @@ class UserResolver {
   @Mutation(() => Boolean)
   async deleteUser(@Arg('id') _id: string) {
     const user = await UserModel.findOne({ _id }).exec();
-    if (!user) throw new Error('Utilisateur non trouvé!');
+    if (!user) throw new Error('User not found!');
     if (user !== null && user !== undefined) {
       await user.remove();
     }

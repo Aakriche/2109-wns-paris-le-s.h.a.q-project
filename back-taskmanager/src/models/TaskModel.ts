@@ -1,19 +1,21 @@
 import mongoose from 'mongoose';
 import { UserData } from './UserModel';
+// eslint-disable-next-line import/no-cycle
+// import { ProjectData } from './ProjectModel';
 
-interface TaskData {
+export interface TaskData {
   id: string | number;
   subject: string;
   description: string;
   project: string;
+  user: string;
   status: string;
   priority: string;
-  user: string;
+  creator: keyof UserData['email'] | string;
   initial_time_estimation: number;
-  initial_time_spent: number;
+  time_spent: number;
   advancement: number;
   deadline: string;
-  author: keyof UserData['email'];
 }
 
 const { Schema } = mongoose;
@@ -21,14 +23,20 @@ const TaskSchema = new Schema<TaskData>({
   subject: String,
   description: String,
   project: String,
+  user: String,
   status: String,
   priority: String,
-  user: String,
+  creator: String,
   initial_time_estimation: Number,
-  initial_time_spent: Number,
+  time_spent: Number,
   advancement: Number,
   deadline: String,
-  author: String,
+},
+{
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+  },
 });
 
 export default mongoose.model<TaskData>('task', TaskSchema);

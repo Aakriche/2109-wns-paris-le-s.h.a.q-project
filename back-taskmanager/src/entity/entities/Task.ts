@@ -1,7 +1,10 @@
 /* eslint-disable import/no-cycle */
 import { Field, ID, ObjectType } from "type-graphql";
-import Project from "./Project";
+// import Project from "./Project";
 import User from "./User";
+
+// role.admin
+// role.project manager
 
 @ObjectType()
 export default class Task {
@@ -14,8 +17,11 @@ export default class Task {
   @Field()
   description!: string;
 
-  @Field(() => ID)
-  project!: Project;
+  @Field(() => ID, { nullable: true })
+  project!: string;
+
+  @Field(() => ID, { nullable: true })
+  user!: string;
 
   @Field({ nullable: true })
   status?: string;
@@ -23,11 +29,9 @@ export default class Task {
   @Field({ nullable: true })
   priority?: string;
 
-  @Field(() => ID)
-  user!: keyof User;
 
   @Field(() => String)
-  author!: keyof User['email'];
+  creator!: keyof User['email'];
 
   @Field({ nullable: true })
   initial_time_estimation?: number;
